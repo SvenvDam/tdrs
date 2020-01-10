@@ -6,7 +6,8 @@ pub mod model;
 
 fn main() {
     let cmd = model::Command::from_args();
-    let path = io::setup_path("~/.tdrs/default".as_ref());
+    let path_buf = dirs::home_dir().map(|home| home.join(".tdrs/default")).unwrap();
+    let path = path_buf.as_path();
 
     let mut state = io::read_state(&path).unwrap();
 
