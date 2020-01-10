@@ -1,6 +1,14 @@
 use structopt::*;
 use serde::{Serialize, Deserialize};
 
+#[derive(StructOpt)]
+pub struct Args {
+    #[structopt(long, short, default_value = "default")]
+    pub list: String,
+    #[structopt(subcommand)]
+    pub cmd: Command
+}
+
 #[derive(StructOpt, Debug)]
 pub enum Command {
     List,
