@@ -12,11 +12,11 @@ pub fn read_state(path: &Path) -> Result<State, Error> {
     let mut f = OpenOptions::new().write(true).create(true).read(true).open(&path)?;
     let mut state_str = String::new();
     f.read_to_string(&mut state_str)?;
-    let state: State = serde_json::from_str(&state_str).unwrap_or(Vec::new());
+    let state: State = serde_json::from_str(&state_str).unwrap_or_default();
     Ok(state)
 }
 
-pub fn persist_state(path: &Path, state: &Vec<ToDo>) -> Result<(), Error> {
+pub fn persist_state(path: &Path, state: &[ToDo]) -> Result<(), Error> {
     let tmp_path = Temp::new_file()?;
     let mut tmp = OpenOptions::new().write(true).create(true).open(&tmp_path)?;
     let str = serde_json::to_string(&state)?;

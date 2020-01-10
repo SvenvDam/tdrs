@@ -2,9 +2,9 @@ use std::io::{stdout, Write};
 
 use super::model::*;
 
-fn write_state(state: &State, mut writer: impl Write) -> () {
+fn write_state(state: &State, mut writer: impl Write) {
     writeln!(writer, "TODO").unwrap();
-    writeln!(writer, "").unwrap();
+    writeln!(writer).unwrap();
     state
         .iter()
         .enumerate()
@@ -19,7 +19,7 @@ fn write_state(state: &State, mut writer: impl Write) -> () {
         })
 }
 
-pub fn update(cmd: Command, state: &mut State) -> () {
+pub fn update(cmd: Command, state: &mut State) {
     match cmd {
         Command::List => {
             write_state(&state, &mut stdout())
