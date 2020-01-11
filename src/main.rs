@@ -14,7 +14,10 @@ fn main() {
 
 fn run(args: model::Args) -> Result<(), Box<dyn Error>> {
     let path_buf = dirs::home_dir()
-        .ok_or("")
+        .ok_or(std::io::Error::new(
+            std::io::ErrorKind::NotFound,
+            "Home directory is not found",
+        ))
         .map(|home| home.join(".tdrs").join(&args.list))?;
 
     let path = path_buf.as_path();
