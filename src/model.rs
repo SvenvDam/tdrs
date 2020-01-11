@@ -1,12 +1,12 @@
+use serde::{Deserialize, Serialize};
 use structopt::*;
-use serde::{Serialize, Deserialize};
 
 #[derive(StructOpt)]
 pub struct Args {
     #[structopt(long, short, default_value = "default")]
     pub list: String,
     #[structopt(subcommand)]
-    pub cmd: Command
+    pub cmd: Command,
 }
 
 #[derive(StructOpt, Debug)]
@@ -14,15 +14,15 @@ pub enum Command {
     List,
     Add {
         #[structopt(short, long)]
-        content: String
+        content: String,
     },
     Close {
         #[structopt(short, long)]
-        index: usize
+        index: usize,
     },
     Delete {
         #[structopt(short, long)]
-        index: usize
+        index: usize,
     },
 }
 
@@ -33,4 +33,3 @@ pub struct ToDo {
 }
 
 pub type State = Vec<ToDo>;
-
