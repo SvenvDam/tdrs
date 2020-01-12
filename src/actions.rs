@@ -1,16 +1,17 @@
-use std::io::{stdout, Write};
+use std::io::{stdout, Write, BufWriter};
 
 use super::model::*;
 
-fn write_state(state: &State, mut writer: impl Write) -> Result<(), std::io::Error> {
-    writeln!(writer, "TODO")?;
-    writeln!(writer)?;
+fn write_state(state: &State, writer: impl Write) -> Result<(), std::io::Error> {
+    let mut buf = BufWriter::new(writer);
+    writeln!(buf, "TODO")?;
+    writeln!(buf)?;
     state
         .iter()
         .enumerate()
         .map(|(i, td)| {
             writeln!(
-                writer,
+                buf,
                 "{}\t{}\t{}",
                 i,
                 if td.open { "open" } else { "done" },
@@ -18,6 +19,7 @@ fn write_state(state: &State, mut writer: impl Write) -> Result<(), std::io::Err
             )
         })
         .fold(Ok(()), |acc, res| acc.and(res))
+        .and(buf.flush())
 }
 
 pub fn update(cmd: Command, state: &mut State) {
