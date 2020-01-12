@@ -2,24 +2,27 @@ use std::io::{stdout, Write};
 
 use super::model::*;
 
-fn write_state(state: &State, mut writer: impl Write) {
-    writeln!(writer, "TODO").unwrap();
-    writeln!(writer).unwrap();
-    state.iter().enumerate().for_each(|(i, td)| {
-        writeln!(
-            writer,
-            "{}\t{}\t{}",
-            i,
-            if td.open { "open" } else { "done" },
-            td.content
-        )
-        .unwrap()
-    })
+fn write_state(state: &State, mut writer: impl Write) -> Result<(), std::io::Error> {
+    writeln!(writer, "TODO")?;
+    writeln!(writer)?;
+    state
+        .iter()
+        .enumerate()
+        .map(|(i, td)| {
+            writeln!(
+                writer,
+                "{}\t{}\t{}",
+                i,
+                if td.open { "open" } else { "done" },
+                td.content
+            )
+        })
+        .fold(Ok(()), |acc, res| acc.and(res))
 }
 
 pub fn update(cmd: Command, state: &mut State) {
     match cmd {
-        Command::List => write_state(&state, &mut stdout()),
+        Command::List => write_state(&state, &mut stdout()).unwrap(),
         Command::Add { content } => {
             state.push(ToDo {
                 open: true,
@@ -90,7 +93,8 @@ mod tests {
             open: true,
             content: "test".to_owned(),
         }];
-        super::write_state(&state, &mut console);
-        assert_eq!(console, b"TODO\n\n0\topen\ttest\n")
+        let res = super::write_state(&state, &mut console);
+        assert_eq!(console, b"TODO\n\n0\topen\ttest\n");
+        assert_eq!(res.ok(), Some(()));
     }
 }
